@@ -21,7 +21,6 @@ Usage: 日期格式化
 周几 Mon,Monday
 时区时差表示 -07,-0700,Z0700,Z07:00,-07:00,MST
 时区字母缩写 MST
-
 godate -d="2017-11-10 18:22:34"  -f="2006-01-02 15:04:05"
 godate -d="2017-11-10 18:22:34"  -f="2006-01-02 15:04:05" -s=1510338154
 godate -s=1510338154
@@ -29,11 +28,11 @@ godate -s=1510338154
 `
 
 const (
-	COLOR_RED = uint8(iota + 91)
+	COLOR_RED     = uint8(iota + 91)
 	COLOR_GREEN
 	COLOR_YELLOW
 	COLOR_BLUE
-	COLOR_MAGENTA //洋红
+	COLOR_MAGENTA  //洋红
 
 )
 
@@ -46,9 +45,8 @@ var (
 )
 
 func now() {
-
+	// 获取当前(当地)时间
 	ts := time.Now()
-
 	fmt.Printf("\x1b[%d;1m%s\x1b[0m", COLOR_MAGENTA, "当前日期:"+ts.Format(FMT)+"\n")
 	fmt.Printf("\x1b[%d;1m%s\x1b[0m", COLOR_BLUE, "当前时间秒:"+strconv.FormatInt(ts.Unix(), 10)+"\n")
 
@@ -57,12 +55,13 @@ func now() {
 func print(dateStr string, s int64, fmts string) {
 
 	if len(dateStr) != 0 && len(fmts) != 0 {
-		parse, err := time.Parse(fmts, dateStr)
+
+		parse, err := time.ParseInLocation(fmts, dateStr, time.Local)
 		if err != nil {
 			log.Fatal(err)
 			now()
 		}
-		fmt.Printf("\x1b[%d;1m%s\x1b[0m", COLOR_RED, "格式化时间:"+strconv.FormatInt(parse.Unix(), 10)+"\n")
+		fmt.Printf("\x1b[%d;1m%s\x1b[0m", COLOR_RED, "格式化时间[带时区]:"+strconv.FormatInt(parse.Unix(), 10)+"\n")
 
 	} else if len(dateStr) != 0 && len(fmts) == 0 {
 
@@ -71,7 +70,7 @@ func print(dateStr string, s int64, fmts string) {
 			log.Fatal(err)
 			now()
 		}
-		fmt.Printf("\x1b[%d;1m%s\x1b[0m", COLOR_RED, "格式化时间:"+strconv.FormatInt(parse.Unix(), 10)+"\n")
+		fmt.Printf("\x1b[%d;1m%s\x1b[0m", COLOR_RED, "格式化时间[本地时间]:"+strconv.FormatInt(parse.Unix(), 10)+"\n")
 
 	}
 
